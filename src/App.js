@@ -1,28 +1,35 @@
 import React, { useState, useRef } from "react";
 import './styles/App.css';
-import Counter from "./components/Counter";
 import PostsList from './components/PostsList';
-
 import PostForm from './components/PostForm';
 import MySelect from "./components/UI/select/MySelect";
 
+import Counter from "./components/Counter";
+import InputValue from "./components/InputValue";
+import MyInput from "./components/UI/input/MyInput";
+
 function App() {
 
-	const [value, setValue] = useState('текс в инпуте');
-
 	const [posts, setPosts] = useState([
-		{ id: 1, title: "JS", description: "Язык программирования" },
-		{ id: 2, title: "JS 2", description: "Язык программирования" },
-		{ id: 3, title: "JS 3", description: "Язык программирования" },
+		{ id: 1, title: "Java", body: "A | Язык программирования" },
+		{ id: 2, title: "JS", body: "D | Язык программирования" },
+		{ id: 3, title: "Php", body: "C | Язык программирования" },
 	]);
+
+	const [selectedSort, setSelectedSort] = useState('');
+	const [searchQuery, setSearchQuery] = useState('');
 
 	// Для контролируемого компонента
 	// const [title, setTitle] = useState('');
 	// const [description, setDescription] = useState('');
 	// Для некотнролируемого компонента
 	// const bodyInputRef = useRef()
+// TODO НАЧИНАЙ ОТ СЮДА 1:13:24 - https://www.youtube.com/watch?v=GNrdg3PzpJQ
+	const sortPosts = (sort) => {
+		setSelectedSort(sort);
+		console.log(sort);
+	}
 
-	
 	const createPost = (newPost) => {
 		setPosts([...posts, newPost]);
 	};
@@ -32,20 +39,48 @@ function App() {
 		setPosts(posts.filter(p => p.id !== post.id))
 	}
 	
+	
 
+	function getSortedPosts() {
+		if (selectedSort) {
+			return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+		}
+		return posts;
+	}
+
+	// JavaScript метод sort() позволяет отсортировать массив путём 
+		// преобразования его элементов в строки и сравнения этих строк в 
+		// порядке следования кодовых символов Unicode
+		// 	(сортирует массив по алфавиту).
+
+		// Метод localeCompare() возвращает число, указывающее,
+		// должна ли данная строка находиться до,
+		// после или в том же самом месте, что и строка,
+		// переданная через параметр, при сортировке этих строк.
+		// Чаще всего используется для упорядочивания массивов:
+		// ['a', 'b', 'c', 'd'].sort((a, b) => a.localeCompare(b))
+	const sortedPosts = getSortedPosts() ;
+
+	
 
 	return (
 		<div className="App">
-			
-
 			<PostForm create={createPost} />
 			<hr />
 			<div>
+				<MyInput
+					value={searchQuery}
+					// e - измение, значение измениея применяем
+					onChange={e => setSearchQuery(e.target.value)}
+					placeholder="Поиск"
+				/>
 				<MySelect
+					value={setSelectedSort}
+					onChange={sortPosts}
 					dafaultValue="Сортировка"
 					options={[
-						{value: "title", name: "По названию"},
-						{value: "description", name: "По описанию"},
+						{ value: "title", name: "По названию" },
+						{ value: "body", name: "По описанию" },
 					]}
 				/>
 			</div>
@@ -54,16 +89,14 @@ function App() {
 					? <PostsList remove={removePost} posts={posts} title="Список постов 1" />
 					: <h2 className="text-center">Посты не найдены</h2>
 			}
-			
-			<hr />
+
+			{/* <hr />
 			<Counter />
-			<h2>{value}</h2>
-			<input
-				type="text"
-				value={value}
-				onChange={event => setValue(event.target.value)}
-			/>
 			<hr />
+			<InputValue />
+			<hr /> */}
+
+
 
 		</div>
 	);

@@ -12,10 +12,9 @@ function Counter(props) {
 
 	return (
 		<>
-			<h1>{count}</h1>
+			<h2>{count}</h2>
 			<button onClick={incriment}>Incriment</button>
 			<button onClick={decriment}>Decriment</button>
-			<hr />
 		</>
 	);
 }

@@ -6,7 +6,7 @@ function PostForm({create}) {
 
 	const [post, setPost] = useState({
 		title: '',
-		description: '',
+		body: '',
 	});
 
 	const addNewPost = (e) => {
@@ -18,7 +18,7 @@ function PostForm({create}) {
 		create(newPost)
 		setPost({
 			title: '',
-			description: '',
+			body: '',
 		});
 	}
 
@@ -32,8 +32,8 @@ function PostForm({create}) {
 				placeholder="Навзание поста"
 			/>
 			<MyInput
-				value={post.description}
-				onChange={e => setPost({ ...post, description: e.target.value })}
+				value={post.body}
+				onChange={e => setPost({ ...post, body: e.target.value })}
 				type="text"
 				placeholder="Навзание поста"
 			/>

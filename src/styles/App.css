@@ -16,7 +16,10 @@ h2, .h2 {
 }
 
 hr {
+	height: 1px;
 	margin: 1.5em auto;
+	background: teal;
+	border: none;
 }
 .text-center {
 	text-align: center;
@@ -39,4 +42,14 @@ hr {
 .post__content {
 }
 .post__btns {
+}
+
+.select {
+	padding: 5px 15px;
+    font-size: 16px;
+    font-weight: 700;
+    color: teal;
+    background-color: transparent;
+    border: 1px solid teal;
+    cursor: pointer;
 }
