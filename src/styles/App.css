@@ -1,0 +1,42 @@
+*,
+*:before,
+*:after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+#root {
+	display: flex;
+	justify-content: center;
+}
+
+h2, .h2 {
+	margin-bottom: 0.5em;
+}
+
+hr {
+	margin: 1.5em auto;
+}
+.text-center {
+	text-align: center;
+}
+
+.App {
+	max-width: 800px;
+	width: 100%;
+}
+
+.post {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin-bottom: 15px;
+	padding: 15px;
+	border: 2px solid teal;
+}
+.post__content {
+}
+.post__btns {
+}
