@@ -11,7 +11,8 @@
 	justify-content: center;
 }
 
-h2, .h2 {
+h2,
+.h2 {
 	margin-bottom: 0.5em;
 }
 
@@ -44,12 +45,30 @@ hr {
 .post__btns {
 }
 
+.post-enter {
+	opacity: 0;
+	transform: translateX(-350px);
+}
+.post-enter-active {
+	opacity: 1;
+	transform: translateX(0);
+	transition: all 500ms ease-in;
+}
+.post-exit {
+	opacity: 1;
+}
+.post-exit-active {
+	opacity: 0;
+	transform: translateX(-350px);
+	transition: all 500ms ease-in;
+}
+
 .select {
 	padding: 5px 15px;
-    font-size: 16px;
-    font-weight: 700;
-    color: teal;
-    background-color: transparent;
-    border: 1px solid teal;
-    cursor: pointer;
+	font-size: 16px;
+	font-weight: 700;
+	color: teal;
+	background-color: transparent;
+	border: 1px solid teal;
+	cursor: pointer;
 }
