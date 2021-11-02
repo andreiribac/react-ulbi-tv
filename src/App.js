@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import './styles/App.css';
 import PostsList from './components/PostsList';
 import PostForm from './components/PostForm';
@@ -19,13 +19,29 @@ function App() {
 	const [selectedSort, setSelectedSort] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
 
+	// function getSortedPosts() {
+	// 	console.log('Work function');
+	// 	if (selectedSort) {
+	// 		return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+	// 	}
+	// 	return posts;
+	// }
+
+	// const sortedPosts = getSortedPosts();
+	const sortedPosts = useMemo(() => {
+		console.log('Work function');
+		if (selectedSort) {
+			return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+		}
+		return posts;
+	}, [selectedSort, posts]);
+
 	// Для контролируемого компонента
 	// const [title, setTitle] = useState('');
 	// const [description, setDescription] = useState('');
 	// Для некотнролируемого компонента
 	// const bodyInputRef = useRef()
 
-	// const sortedPosts = getSortedPosts();
 
 	const createPost = (newPost) => {
 		setPosts([...posts, newPost]);
@@ -49,16 +65,12 @@ function App() {
 		// ['a', 'b', 'c', 'd'].sort((a, b) => a.localeCompare(b))
 	const sortPosts = (sort) => {
 		setSelectedSort(sort);
-		console.log(sort);
-		setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])));
+		// console.log(sort);
+		// setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])));
+		
 	}
 
-	function getSortedPosts() {
-		if (selectedSort) {
-			return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
-		}
-		return posts;
-	}
+	
 
 	
 
@@ -85,7 +97,7 @@ function App() {
 			</div>
 			{
 				posts.length
-					? <PostsList remove={removePost} posts={posts} title="Список постов 1" />
+					? <PostsList remove={removePost} posts={sortedPosts} title="Список постов 1" />
 					: <h2 className="text-center">Посты не найдены</h2>
 			}
 
