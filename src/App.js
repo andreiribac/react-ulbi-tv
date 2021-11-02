@@ -22,6 +22,7 @@ function App() {
 	const [modal, setModal] = useState(false);	
 	const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query,)
 
+// TODO 1:36:24 Работа с сервером - https://www.youtube.com/watch?v=GNrdg3PzpJQ&t=4404s
 
 	const createPost = (newPost) => {
 		setPosts([...posts, newPost]);
