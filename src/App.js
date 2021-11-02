@@ -11,9 +11,9 @@ import MyInput from "./components/UI/input/MyInput";
 function App() {
 
 	const [posts, setPosts] = useState([
-		{ id: 1, title: "Java", body: "A | Язык программирования" },
-		{ id: 2, title: "JS", body: "D | Язык программирования" },
-		{ id: 3, title: "Php", body: "C | Язык программирования" },
+		{ id: 1, title: "(2) | Java", body: "(3) | Язык программирования" },
+		{ id: 2, title: "(3) | JS", body: "(1) | Язык программирования" },
+		{ id: 3, title: "(1) | Php", body: "(2) | Язык программирования" },
 	]);
 
 	const [selectedSort, setSelectedSort] = useState('');
@@ -24,11 +24,8 @@ function App() {
 	// const [description, setDescription] = useState('');
 	// Для некотнролируемого компонента
 	// const bodyInputRef = useRef()
-// TODO НАЧИНАЙ ОТ СЮДА 1:13:24 - https://www.youtube.com/watch?v=GNrdg3PzpJQ
-	const sortPosts = (sort) => {
-		setSelectedSort(sort);
-		console.log(sort);
-	}
+
+	// const sortedPosts = getSortedPosts();
 
 	const createPost = (newPost) => {
 		setPosts([...posts, newPost]);
@@ -39,15 +36,6 @@ function App() {
 		setPosts(posts.filter(p => p.id !== post.id))
 	}
 	
-	
-
-	function getSortedPosts() {
-		if (selectedSort) {
-			return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
-		}
-		return posts;
-	}
-
 	// JavaScript метод sort() позволяет отсортировать массив путём 
 		// преобразования его элементов в строки и сравнения этих строк в 
 		// порядке следования кодовых символов Unicode
@@ -59,7 +47,18 @@ function App() {
 		// переданная через параметр, при сортировке этих строк.
 		// Чаще всего используется для упорядочивания массивов:
 		// ['a', 'b', 'c', 'd'].sort((a, b) => a.localeCompare(b))
-	const sortedPosts = getSortedPosts() ;
+	const sortPosts = (sort) => {
+		setSelectedSort(sort);
+		console.log(sort);
+		setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])));
+	}
+
+	function getSortedPosts() {
+		if (selectedSort) {
+			return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+		}
+		return posts;
+	}
 
 	
 
@@ -75,9 +74,9 @@ function App() {
 					placeholder="Поиск"
 				/>
 				<MySelect
-					value={setSelectedSort}
-					onChange={sortPosts}
+					value={selectedSort}
 					dafaultValue="Сортировка"
+					onChange={sortPosts}
 					options={[
 						{ value: "title", name: "По названию" },
 						{ value: "body", name: "По описанию" },
