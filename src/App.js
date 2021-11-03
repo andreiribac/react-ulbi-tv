@@ -14,6 +14,8 @@ import { usePosts } from './hooks/usePosts';
 import PostService from './API/PostService';
 import Loader from "./components/UI/Loader/Loader";
 import { useFetching } from './hooks/useFetching';
+import { getPageCount, getPagesArray } from './utils/pages';
+import Pagination from "./components/UI/pagination/Pagination";
 
 function App() {
 	const [posts, setPosts] = useState([
@@ -22,25 +24,33 @@ function App() {
 		// { id: 3, title: "(1) | Php", body: "(2) | Язык программирования" },
 	]);
 	const [filter, setFilter] = useState({ sort: '', query: '' });
-	const [modal, setModal] = useState(false);	
+	const [modal, setModal] = useState(false);
+	// Создаем состояние куда будем помещать общее количество постов
+	const [totalPages, setTotalPages] = useState(0);
+	// Для лимита и номера странци создаем отдельное состояние
+	const [limit, setLimit] = useState(10);
+	const [page, setPage] = useState(1);
+
 	const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query,);
 	// const [isPostsLoading, setIsPostsLoading] = useState(false);
+
+	
 
 	// Это хук, который предоставляет часто используемый функционал
 	// Именно - обработку индикации загрузки и обработку ошибки какого-то
 	// Запроса на получение данныйх
 	// При этом он возвращет нам массив из 3 элементов
 	// И этими элементами внутри любого компонента мы можем управлять как хотим
-	const [fetchPosts, isPostsLoading, postError] = useFetching( async () => {
-		const posts = await PostService.getAll();
-		setPosts(posts);
+	const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit, page) => {
+		const response = await PostService.getAll(limit, page);
+		setPosts(response.data);
+		const totalCount = response.headers['x-total-count'];
+		setTotalPages(getPageCount(totalCount, limit))
 	});
 
 	useEffect(() => {
-		fetchPosts()
-		// return () => {
-		// 	// cleanup
-		// }
+		fetchPosts(limit, page)
+	// }, [page])
 	}, [])
 
 	const createPost = (newPost) => {
@@ -52,15 +62,21 @@ function App() {
 	// async function fetchPosts() {
 	// 	setIsPostsLoading(true);
 	// 	setTimeout(async () => {
-			
+
 	// 		setIsPostsLoading(false);
 	// 	 }, 1000);
-		
+
 	// }
 
 	// Получаем пост из дочернего компонента
 	const removePost = (post) => {
 		setPosts(posts.filter(p => p.id !== post.id))
+	}
+
+	// Создаем функцию которая будет изменять номер страницы 
+	const changePage = (page) => {
+		setPage(page);
+		fetchPosts(limit, page);
 	}
 
 	// JavaScript метод sort() позволяет отсортировать массив путём 
@@ -88,11 +104,11 @@ function App() {
 				<h3 className='text-center'>Добавьте пост</h3>
 				<PostForm create={createPost} />
 			</MyModal>
-			<hr/>
+			<hr />
 			<MyButton onClick={() => setModal(true)}>
 				Создать пост
 			</MyButton>
-			<hr/>
+			<hr />
 			<PostFilter
 				filter={filter}
 				setFilter={setFilter}
@@ -108,7 +124,13 @@ function App() {
 					title="Список постов"
 				/>
 			}
-			
+			<hr />
+			<Pagination
+				page={page}
+				changePage={changePage}
+				totalPages={totalPages}
+			/>
+			<hr />
 
 			{/* <hr />
 			<Counter />

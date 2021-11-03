@@ -1,8 +1,20 @@
 import axios from "axios";
 
+// https://jsonplaceholder.typicode.com/posts?_limit=10&_page=2
+// ? - начало для query парметров
+// _limit=10 - указывает сколько элементов необходимо вернуть
+// & - для добавления второго парметра
+// _page=2 - какую страницу показывать
 export default class PostService {
-	static async getAll() {
-		const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
-		return response.data;
+	static async getAll(limit = 10, page = 1) {
+		const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+			// Свойство axios
+			params: {
+				_limit: limit,
+				_page: page,
+			}
+
+		});
+		return response;
 	}
 }

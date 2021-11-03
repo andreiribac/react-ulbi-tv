@@ -72,3 +72,20 @@ hr {
 	border: 1px solid teal;
 	cursor: pointer;
 }
+.page {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 1px;
+	padding: 10px;
+	width: 41px;
+	height: 41px;
+	border: 1px solid teal;
+	cursor: pointer;
+}
+.page:hover,
+.page--current {
+	color: white;
+	font-weight: 700;
+	background-color: teal;
+}
