@@ -42,8 +42,13 @@ hr {
 }
 /* .post__content {
 } */
-/* .post__btns {
-} */
+.post__btns {
+	display: flex;
+	align-items: center;
+}
+.post__btns > * + * {
+	margin-left: 5px;
+}
 
 .post-enter {
 	opacity: 0;

@@ -5,14 +5,11 @@ import About from "./pages/About";
 import Posts from './pages/Posts';
 import NavBar from './components/UI/NavBar/NavBar';
 import Page404 from './components/UI/Page404/Page404';
+import PostIdPage from './pages/PostIdPage';
 
 
 function App() {
 	return (
-		// <>
-		// 	work
-
-		// </>
 		<BrowserRouter>
 			<div className='App'>
 				{/* <NavBar /> */}
@@ -22,13 +19,12 @@ function App() {
 						<Route path="/about" element={
 							<About name={"Andrei"} />
 						} />
-						<Route path="/posts" element={
-							<Posts />
-						} />
+						<Route exact path="/posts" element={<Posts />} />
+						<Route exact path="/posts/:id" element={<PostIdPage />} />
+
 						<Route path="*" element={<Page404 />} />
 					</Route>
 				</Routes>
-
 			</div>
 		</BrowserRouter>
 	)
