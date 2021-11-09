@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles/App.css';
 import { BrowserRouter, Routes, Route, } from "react-router-dom";
 import About from "./pages/About";
@@ -6,15 +6,31 @@ import Posts from './pages/Posts';
 import NavBar from './components/UI/NavBar/NavBar';
 import Page404 from './components/UI/Page404/Page404';
 import PostIdPage from './pages/PostIdPage';
-import { privateRoutes, publicRoutes } from './router';
+import { privateRoutes, publicRoutes } from './router/routers';
+import { AuthContext } from './context/context';
+import AppRouter from './components/AppRouter';
 
 
 function App() {
-	const isAuth = true;
+	const [isAuth, setIsAuth] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		if (localStorage.getItem('auth')) {
+			setIsAuth(true);
+		}
+		setIsLoading(false);
+	}, [])
+
 	return (
-		<BrowserRouter>
-			<div className='App'>
-				{/* <Routes>
+		<AuthContext.Provider value={{
+			isAuth,
+			setIsAuth,
+			isLoading,
+		}}>
+			<BrowserRouter>
+				<div className='App'>
+					{/* <Routes>
 					<Route path="/" element={<NavBar />}>
 						<Route index element={<Posts />} />
 						<Route path="/about" element={<About name={"Andrei"} />} />
@@ -24,36 +40,13 @@ function App() {
 						<Route path="*" element={<Page404 />} />
 					</Route>
 				</Routes> */}
-				<NavBar />
-				{
-					isAuth
-						? <Routes>
-							{
-								privateRoutes.map(route =>
-									<Route
-										path={route.path}
-										element={route.component}
-										exact={route.exact}
-									/>
-								)
-							}
-						</Routes>
-						: <Routes>
-							{
-								publicRoutes.map(route =>
-									<Route
-										path={route.path}
-										element={route.component}
-										exact={route.exact}
-									/>
-								)
-							}
-						</Routes>
-				}
+					<NavBar />
+					<AppRouter/>
 
 
-			</div>
-		</BrowserRouter>
+				</div>
+			</BrowserRouter>
+		</AuthContext.Provider>
 	)
 }
 

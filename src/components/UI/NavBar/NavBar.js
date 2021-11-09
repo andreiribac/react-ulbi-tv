@@ -1,7 +1,16 @@
-import React from 'react'
+import React, { useContext} from 'react'
 import { Link, Outlet } from "react-router-dom";
+import MyButton from '../button/MyButton';
+import { AuthContext } from '../../../context/context';
 
 function NavBar() {
+	const { isAuth, setIsAuth } = useContext(AuthContext);
+
+	const logout = () => {
+		setIsAuth(false);
+		localStorage.removeItem('auth');
+	}
+
 	return (
 		<>
 			<nav className='nav'>
@@ -16,6 +25,7 @@ function NavBar() {
 						<Link to="posts" className='nav__link' >Posts</Link>
 					</li>
 				</ul>
+				<MyButton onClick={logout}>Выйти</MyButton>
 			</nav>
 			<Outlet />
 		</>
