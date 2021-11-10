@@ -21,7 +21,6 @@ function App() {
 		}
 		setIsLoading(false);
 	}, [])
-
 	return (
 		<AuthContext.Provider value={{
 			isAuth,

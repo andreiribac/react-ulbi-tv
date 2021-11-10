@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PostsList from '../components/PostsList';
 import PostForm from '../components/PostForm';
 import MySelect from "../components/UI/select/MySelect";
@@ -15,13 +15,10 @@ import Loader from "../components/UI/Loader/Loader";
 import { useFetching } from '../hooks/useFetching';
 import { getPageCount, getPagesArray } from '../utils/pages';
 import Pagination from "../components/UI/pagination/Pagination";
+import { useObserver } from '../hooks/useObserver';
 
 function Posts() {
-	const [posts, setPosts] = useState([
-		// { id: 1, title: "(2) | Java", body: "(3) | Язык программирования" },
-		// { id: 2, title: "(3) | JS", body: "(1) | Язык программирования" },
-		// { id: 3, title: "(1) | Php", body: "(2) | Язык программирования" },
-	]);
+	const [posts, setPosts] = useState([]);
 	const [filter, setFilter] = useState({ sort: '', query: '' });
 	const [modal, setModal] = useState(false);
 	// Создаем состояние куда будем помещать общее количество постов
@@ -33,6 +30,8 @@ function Posts() {
 	const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query,);
 	// const [isPostsLoading, setIsPostsLoading] = useState(false);
 
+	const lastElement = useRef();
+
 
 
 	// Это хук, который предоставляет часто используемый функционал
@@ -42,15 +41,32 @@ function Posts() {
 	// И этими элементами внутри любого компонента мы можем управлять как хотим
 	const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit, page) => {
 		const response = await PostService.getAll(limit, page);
-		setPosts(response.data);
+		setPosts([...posts, ...response.data]);
 		const totalCount = response.headers['x-total-count'];
 		setTotalPages(getPageCount(totalCount, limit))
 	});
 
+	// useEffect(() => {
+	// 	if (isPostsLoading) return;
+	// 	if (observer.current) observer.current.disconnect();
+	// 	let callback = function (entries, observer) {
+	// 		if (entries[0].isIntersecting && page < totalPages) {
+	// 			console.log(page);
+	// 			setPage(page + 1);
+	// 		}
+			
+	// 	};
+	// 	observer.current = new IntersectionObserver(callback);
+	// 	observer.current.observe(lastElement.current)
+	// }, [isPostsLoading]);
+
+	useObserver(lastElement, page < totalPages, isPostsLoading, () => {
+		setPage(page + 1);
+	});
+
 	useEffect(() => {
 		fetchPosts(limit, page)
-		// }, [page])
-	}, [])
+	}, [limit, page]);
 
 	const createPost = (newPost) => {
 		setPosts([...posts, newPost]);
@@ -75,7 +91,7 @@ function Posts() {
 	// Создаем функцию которая будет изменять номер страницы 
 	const changePage = (page) => {
 		setPage(page);
-		fetchPosts(limit, page);
+		// fetchPosts(limit, page);
 	}
 
 	// JavaScript метод sort() позволяет отсортировать массив путём 
@@ -112,17 +128,27 @@ function Posts() {
 				filter={filter}
 				setFilter={setFilter}
 			/>
+			<MySelect
+				value={limit}
+				onChange={value => setLimit(value)}
+				defaultValue="Кол-во элементов на странице"
+				options={[
+					{ value: 5, name: '5' },
+					{ value: 10, name: '10' },
+					{ value: 25, name: '25' },
+					{ value: -1, name: 'Показать все' },
+				]}
+			/>
 			{postError &&
 				<h2 className='text-center'>Произошла ошибка ${postError}</h2>
 			}
-			{isPostsLoading
-				? <Loader />
-				: <PostsList
-					remove={removePost}
-					posts={sortedAndSearchedPosts}
-					title="Список постов"
-				/>
-			}
+			{isPostsLoading && <Loader />}
+			<PostsList
+				remove={removePost}
+				posts={sortedAndSearchedPosts}
+				title="Список постов"
+			/>
+			<div ref={lastElement} style={{height: 20, background: "red"}}></div>
 			<hr />
 			<Pagination
 				page={page}
